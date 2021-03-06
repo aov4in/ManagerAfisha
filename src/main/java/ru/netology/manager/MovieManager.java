@@ -1,37 +1,30 @@
 package ru.netology.manager;
 
 import ru.netology.domain.PurchaseItem;
+import ru.netology.repository.MovieRepository;
 
 public class MovieManager {
-    private PurchaseItem[] items = new PurchaseItem[0];
-
-    public MovieManager(int posterLength) {
-        this.posterLength = posterLength;
-    }
-
-    public MovieManager() {}
-
+    private MovieRepository repository;
     private int posterLength = 10;
 
-    public void add(PurchaseItem item) {
+    public MovieManager(MovieRepository repository) {
+        this.repository = repository;
+    }
 
-        int length = items.length + 1;
-        PurchaseItem[] tmp = new PurchaseItem[length];
-        System.arraycopy(items, 0, tmp, 0, items.length);
-        int lastIndex = tmp.length - 1;
-        tmp[lastIndex] = item;
-        items = tmp;
+    public void add(PurchaseItem item) {
+        repository.save(item);
     }
 
     public PurchaseItem[] getAll() {
+        PurchaseItem[] items = repository.findAll();
         int resultLength = Math.min(posterLength, items.length);
         PurchaseItem[] result = new PurchaseItem[resultLength];
-        // результат в обратном порядке
         for (int i = 0; i < result.length; i++) {
             int index = items.length - i - 1;
             result[i] = items[index];
         }
         return result;
     }
+
 
 }
